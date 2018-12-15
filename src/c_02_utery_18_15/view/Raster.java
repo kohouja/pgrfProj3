@@ -8,8 +8,8 @@ import java.util.TimerTask;
 
 public class Raster extends JPanel {
 
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 1024;
+    public static final int HEIGHT = 768;
     private static final int FPS = 1000 / 30;
     private final BufferedImage bi;
     private final Graphics g;
@@ -18,6 +18,9 @@ public class Raster extends JPanel {
         // inicializace image, nastavení rozměrů (nastavení typu - pro nás nedůležité)
         bi = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = bi.getGraphics();
+        g.setColor(Color.WHITE);
+
+
         setLoop();
 
 //        TODO vytvori metodu raster draw string pro predani parametru atd...
@@ -44,6 +47,9 @@ public class Raster extends JPanel {
     public void clear() {
         g.setColor(Color.BLACK);
         g.clearRect(0, 0, WIDTH, HEIGHT);
+        g.setColor(Color.WHITE);
+        g.drawString("WASD -> walk || Mouse left -> look around || Mouse right -> rotate full || Mouse right + SHIFT -> rotate solids|| X -> Bezier || C -> Fergusson || V -> Coons",
+                5, HEIGHT - 50);
     }
 
     public void drawPixel(int x, int y, int color) {

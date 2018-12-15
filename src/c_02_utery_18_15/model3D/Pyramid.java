@@ -6,6 +6,7 @@ import java.awt.*;
 
 public class Pyramid extends Solid{
     public Pyramid() {
+        this.isAxe = false;
         this.color = Color.WHITE;
         vertices.add(new Point3D(-1, -1, -1));
         vertices.add(new Point3D(1, -1, -1));

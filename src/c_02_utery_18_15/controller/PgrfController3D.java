@@ -1,8 +1,6 @@
 package c_02_utery_18_15.controller;
 
-import c_02_utery_18_15.model3D.Cube;
-import c_02_utery_18_15.model3D.Pyramid;
-import c_02_utery_18_15.model3D.Solid;
+import c_02_utery_18_15.model3D.*;
 import c_02_utery_18_15.renderer.Renderer3D;
 import c_02_utery_18_15.view.Raster;
 import transforms.*;
@@ -18,6 +16,11 @@ public class PgrfController3D {
     private Solid cube;
     private Solid pyramid;
     private Camera camera;
+    private boolean mode = true;
+    private boolean bezier = false;
+    private boolean fergusson = false;
+    private boolean coons = false;
+
 
     private int mx, my;
 
@@ -32,6 +35,7 @@ public class PgrfController3D {
         pyramid = new Pyramid();
         renderer3D = new Renderer3D(raster);
         renderer3D.add(cube, pyramid);
+        renderer3D.add(new Spiral());
         resetCamera();
     }
 
@@ -63,8 +67,12 @@ public class PgrfController3D {
                     renderer3D.setView(camera.getViewMatrix());
 
                     double diffY = (my - e.getY()) / 100.0;
-                    double zenit = camera.getZenith() + diffY;
-                    camera =  camera.withZenith(zenit);
+                    double zenit = camera.getZenith();
+                    if((zenit+diffY) <= 1.5 && (zenit+diffY) >= -1.5){
+                        zenit = zenit+diffY;
+                        camera =  camera.withZenith(zenit);
+                    }
+                    System.out.println(zenit);
                     renderer3D.setView(camera.getViewMatrix());
 
 
@@ -104,12 +112,10 @@ public class PgrfController3D {
             public void keyPressed(KeyEvent e) {
                 if(!e.isShiftDown()){
                     switch (e.getKeyCode()) {
-                        case KeyEvent.VK_UP:
                         case KeyEvent.VK_W:
                             camera = camera.forward(1);
                             renderer3D.setView(camera.getViewMatrix());
                             break;
-                        case KeyEvent.VK_DOWN:
                         case KeyEvent.VK_S:
                             camera = camera.backward(1);
                             renderer3D.setView(camera.getViewMatrix());
@@ -124,7 +130,14 @@ public class PgrfController3D {
                             camera = camera.right(1);
                             renderer3D.setView(camera.getViewMatrix());
                             break;
-
+                        case KeyEvent.VK_UP:
+                            camera = camera.up(1);
+                            renderer3D.setView(camera.getViewMatrix());
+                            break;
+                        case KeyEvent.VK_DOWN:
+                            camera = camera.down(1);
+                            renderer3D.setView(camera.getViewMatrix());
+                            break;
                     }
                 }else if(e.isShiftDown()){
                     Mat4 move;
@@ -161,6 +174,41 @@ public class PgrfController3D {
                             renderer3D.setMove(translationSpeed, "z");
                         break;
                     }
+                }
+                if(e.getKeyCode() == KeyEvent.VK_M){
+                    mode = !mode;
+                    if(!mode){
+                        renderer3D.setProjection(new Mat4OrthoRH(Math.PI / 4, Raster.HEIGHT / (float) Raster.WIDTH, 1, 200));
+                        renderer3D.repaint();
+                    }else{
+                        renderer3D.setProjection(new Mat4PerspRH(Math.PI / 4, Raster.HEIGHT / (float) Raster.WIDTH, 1, 200));
+                        renderer3D.repaint();
+                    }
+                }
+                if(e.getKeyCode() == KeyEvent.VK_X){
+                    bezier = !bezier;
+                    if(bezier){
+                        Cubic3D cubic3D = new Cubic3D();
+                        cubic3D.createBezier();
+                        renderer3D.add(cubic3D);
+                    }
+                }
+                if(e.getKeyCode() == KeyEvent.VK_C){
+                    fergusson = !fergusson;
+                    if(fergusson){
+                        Cubic3D cubic3D = new Cubic3D();
+                        cubic3D.createFergusson();
+                        renderer3D.add(cubic3D);
+                    }
+                }
+                if(e.getKeyCode() == KeyEvent.VK_V){
+                    coons = !coons;
+                    if(coons){
+                        Cubic3D cubic3D = new Cubic3D();
+                        cubic3D.createCoons();
+                        renderer3D.add(cubic3D);
+                    }
+
                 }
 
             }

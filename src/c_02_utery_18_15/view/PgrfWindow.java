@@ -1,9 +1,10 @@
 package c_02_utery_18_15.view;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class PgrfWindow extends JFrame {
-
+    private JButton para, ortho, cube, pyramid, spiral, animation;
     private Raster raster;
 
     public PgrfWindow() {
@@ -17,6 +18,9 @@ public class PgrfWindow extends JFrame {
         raster.setFocusable(true);
         raster.grabFocus();
         add(raster); // vložit plátno do okna
+
+
+
     }
 
     public Raster getRaster() {

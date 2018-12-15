@@ -1,6 +1,6 @@
 package c_02_utery_18_15.renderer;
 
-import c_02_utery_18_15.model3D.Axes;
+import c_02_utery_18_15.model3D.Axe;
 import c_02_utery_18_15.model3D.Solid;
 import c_02_utery_18_15.utils.Utils;
 import c_02_utery_18_15.view.Raster;
@@ -19,6 +19,7 @@ public class Renderer3D {
     private Mat4 model;
     private final List<Solid> solids = new ArrayList<>();
 
+
     public Renderer3D(Raster raster) {
         this.raster = raster;
 
@@ -30,6 +31,7 @@ public class Renderer3D {
         view = new Mat4ViewRH(e, d, u);
 
         projection = new Mat4PerspRH(Math.PI / 4, Raster.HEIGHT / (float) Raster.WIDTH, 1, 200);
+
         //  projection = Mat4orthoRH -> prepinat s puvodni
     }
 
@@ -103,16 +105,12 @@ https://youtu.be/GGG3cL6vfSc
     }
 
     public void createAxes(){
-       Solid solid = new Axes();
-            List<Point3D> vertices = solid.getVertices();
-            List<Integer> indices = solid.getIndices();
-            for (int i = 0; i < indices.size(); i += 2) {
-                int index1 = indices.get(i);
-                int index2 = indices.get(i + 1);
-                Point3D a = vertices.get(index1);
-                Point3D b = vertices.get(index2);
-                drawLine(a, b, solid.getColor()/*, solid instanceof */);
-            }
+        Solid solid = new Axe(Color.RED, new Point3D(0,0,0), new Point3D(1, 0,0));
+        solids.add(solid);
+        solid = new Axe(Color.ORANGE, new Point3D(0,0,0), new Point3D(0, -1,0));
+        solids.add(solid);
+        solid = new Axe(Color.CYAN, new Point3D(0,0,0), new Point3D(0, 0,1));
+        solids.add(solid);
     }
 
     public Mat4 getProjection() {
@@ -143,7 +141,9 @@ https://youtu.be/GGG3cL6vfSc
 
     public void setScale(double scale){
         for (Solid solid: solids) {
-            Utils.setScale(solid, scale);
+            if(!solid.isAxe()){
+                Utils.setScale(solid, scale);
+            }
         }
         repaint();
     }
@@ -152,17 +152,23 @@ https://youtu.be/GGG3cL6vfSc
         switch(axe){
             case "x":
                 for (Solid solid: solids){
-                    Utils.setMoveX(solid, moveSpeed);
+                    if(!solid.isAxe()) {
+                        Utils.setMoveX(solid, moveSpeed);
+                    }
                 }
                 break;
             case "y":
                 for (Solid solid: solids){
-                    Utils.setMoveY(solid, moveSpeed);
+                    if(!solid.isAxe()) {
+                        Utils.setMoveY(solid, moveSpeed);
+                    }
                 }
                 break;
             case "z":
                 for (Solid solid: solids){
-                    Utils.setMoveZ(solid, moveSpeed);
+                    if(!solid.isAxe()) {
+                        Utils.setMoveZ(solid, moveSpeed);
+                    }
                 }
                 break;
         }
@@ -171,7 +177,9 @@ https://youtu.be/GGG3cL6vfSc
 
     public void setRotation(double rotX, double rotY){
         for (Solid solid: solids) {
-            Utils.setRotation(solid, rotX, rotY);
+            if(!solid.isAxe()) {
+                Utils.setRotation(solid, rotX, rotY);
+            }
         }
         repaint();
     }
